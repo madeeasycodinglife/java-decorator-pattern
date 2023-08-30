@@ -1,0 +1,156 @@
+**Java Decorator Pattern: Adding Behavior to Objects Dynamically**
+
+The Decorator Design Pattern allows you to dynamically add behavior to objects without modifying their classes.
+It is used to extend the functionality of individual objects without altering their structure.
+
+**Example:**
+
+Here's an example of a decorator pattern in Java that demonstrates adding toppings to a pizza:
+
+                +------------------+
+                |      Pizza       |
+                +------------------+
+                | - getDescription |
+                | - getCost        |
+                +------------------+
+                       /        \
+            +------------+    +--------------+
+            | BasicPizza |    | ToppingDecorator |
+            +------------+    +--------------+
+            | +getDescription| | - pizza         |
+            | +getCost       | | +getDescription|
+            +------------+    | +getCost       |
+                            \    +--------------+
+         +-------------------+   /        \
+         |   CheeseTopping   |  /    +-----------+
+         +-------------------+ /     | TomatoTop |
+         | - pizza          | \     +-----------+
+         | +getDescription  |  \     | - pizza     |
+         | +getCost         |   \   | +getDescrip|
+         +-------------------+    \  | +getCost   |
+                                 \  +-----------+
+                                 \
+                             +-----------------+
+                             |    Concrete     |
+                             |   ToppingDecor   |
+                             +-----------------+
+                             | - pizza         |
+                             | +getDescription|
+                             | +getCost       |
+                             +-----------------+
+
+   ----- OR IN SIMPLE FORM -----
+
+     BasicPizza
+         |
+    ToppingDecorator
+         /   \
+CheeseTopping  TomatoTopping
+
+
+```java
+// Component Interface (Pizza)
+interface Pizza {
+    String getDescription();
+    double getCost();
+}
+
+// Concrete Component (BasicPizza)
+class BasicPizza implements Pizza {
+    @Override
+    public String getDescription() {
+        return "Basic Pizza";
+    }
+
+    @Override
+    public double getCost() {
+        return 10.0;
+    }
+}
+
+// Decorator (ToppingDecorator)
+abstract class ToppingDecorator implements Pizza {
+    protected Pizza pizza;
+
+    public ToppingDecorator(Pizza pizza) {
+        this.pizza = pizza;
+    }
+
+    @Override
+    public String getDescription() {
+        return pizza.getDescription();
+    }
+
+    @Override
+    public double getCost() {
+        return pizza.getCost();
+    }
+}
+
+// Concrete Decorators (CheeseTopping, TomatoTopping)
+class CheeseTopping extends ToppingDecorator {
+    public CheeseTopping(Pizza pizza) {
+        super(pizza);
+    }
+
+    @Override
+    public String getDescription() {
+        return pizza.getDescription() + ", Cheese";
+    }
+
+    @Override
+    public double getCost() {
+        return pizza.getCost() + 2.0;
+    }
+}
+
+class TomatoTopping extends ToppingDecorator {
+    public TomatoTopping(Pizza pizza) {
+        super(pizza);
+    }
+
+    @Override
+    public String getDescription() {
+        return pizza.getDescription() + ", Tomato";
+    }
+
+    @Override
+    public double getCost() {
+        return pizza.getCost() + 1.5;
+    }
+}
+
+// Client Code
+public class DecoratorExample {
+    public static void main(String[] args) {
+        Pizza basicPizza = new BasicPizza();
+        Pizza cheeseTomatoPizza = new TomatoTopping(new CheeseTopping(basicPizza));
+
+        System.out.println("Pizza Description: " + cheeseTomatoPizza.getDescription());
+        System.out.println("Pizza Cost: $" + cheeseTomatoPizza.getCost());
+    }
+}
+```
+
+**How to Identify When to Apply the Decorator Design Pattern:**
+
+1. **Responsibility Separation:** When you want to add responsibilities or behaviors to objects without modifying their classes directly.
+
+2. **Open-Closed Principle:** If you need to extend the behavior of existing classes without altering their source code.
+
+3. **Flexible Extension:** When you want to add or remove behaviors dynamically at runtime.
+
+**Where to Apply the Decorator Design Pattern:**
+
+- **Text Formatting:** Applying different formatting styles (bold, italic) to text.
+
+- **Stream Processing:** Adding encryption, compression, or buffering to streams.
+
+- **User Interfaces:** Adding borders, shadows, or decorations to UI components.
+
+- **Logging:** Adding additional logging information or formatting to log messages.
+
+- **Security:** Adding security checks or encryption layers to objects.
+
+By applying the Decorator Design Pattern, you can achieve dynamic behavior extension while maintaining code flexibility
+and adhering to the open-closed principle, allowing you to add new features to existing classes without modifying their source code.
